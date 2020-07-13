@@ -4,22 +4,22 @@ const { createFilePath } = require(`gatsby-source-filesystem`)
 exports.createPages = async ({ graphql, actions }) => {
   const { createPage } = actions
 
-  const blogPost = path.resolve(`./src/templates/blog-post.tsx`)
+  const blogPostTemplate = path.resolve(`./src/templates/blog-post.tsx`)
   const result = await graphql(
     `
       {
-        allMarkdownRemark(
-          sort: { fields: [frontmatter___date], order: DESC }
-          limit: 1000
-        ) {
-          edges {
-            node {
-              fields {
-                slug
+        allContentfulBlogPost {
+          nodes {
+            date(locale: "ja", fromNow: true)
+            id
+            slug
+            title
+            tags
+            description {
+              childMarkdownRemark {
+                html
               }
-              frontmatter {
-                title
-              }
+              description
             }
           }
         }
@@ -32,33 +32,19 @@ exports.createPages = async ({ graphql, actions }) => {
   }
 
   // Create blog posts pages.
-  const posts = result.data.allMarkdownRemark.edges
-
-  posts.forEach((post, index) => {
-    const previous = index === posts.length - 1 ? null : posts[index + 1].node
-    const next = index === 0 ? null : posts[index - 1].node
+  result.data.allContentfulBlogPost.nodes.forEach((node, index) => {
+    // const previous = node.length ===  ? index : null
+    // const next = index === 0 ? null : `${node.slug}_${index - 1}`
 
     createPage({
-      path: post.node.fields.slug,
-      component: blogPost,
+      path: `${node.slug}_${index + 1}`,
+      component: blogPostTemplate,
       context: {
-        slug: post.node.fields.slug,
-        previous,
-        next,
+        slug: `${node.slug}_${index + 1}`,
+        node: node,
+        // previous,
+        // next,
       },
     })
   })
-}
-
-exports.onCreateNode = ({ node, actions, getNode }) => {
-  const { createNodeField } = actions
-
-  if (node.internal.type === `MarkdownRemark`) {
-    const value = createFilePath({ node, getNode })
-    createNodeField({
-      name: `slug`,
-      node,
-      value,
-    })
-  }
 }

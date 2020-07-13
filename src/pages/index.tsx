@@ -1,67 +1,66 @@
 import React from "react"
-import { Link, graphql } from "gatsby"
+import { Link, graphql, useStaticQuery } from "gatsby"
 
 import Layout from "../components/layout"
 import SEO from "../components/seo"
 
-const BlogIndex = ({ data, location }) => {
-  const siteTitle = data.site.siteMetadata.title
-  const posts = data.allMarkdownRemark.edges
+const IndexPage = () => {
 
-  return (
-    <Layout location={location} title={siteTitle}>
-      <SEO title="All posts" />
-      {posts.map(({ node }) => {
-        const title = node.frontmatter.title || node.fields.slug
-        return (
-          <article className="media" key={node.fields.slug}>
-            <div className="media-content">
-              <div className="content">
-                <h3 className="title">
-                  <Link style={{ boxShadow: `none` }} to={node.fields.slug}>
-                    {title}
-                  </Link>
-                </h3>
-                <p>
-                  <small>{node.frontmatter.date}</small>
-                </p>
-                <p
-                  dangerouslySetInnerHTML={{
-                    __html: node.frontmatter.description || node.excerpt,
-                  }}
-                />
-              </div>
-            </div>
-          </article>
-        )
-      })}
-    </Layout>
-  )
-}
-
-export default BlogIndex
-
-export const pageQuery = graphql`
-  query {
-    site {
-      siteMetadata {
-        title
+  const data = useStaticQuery(graphql`
+    query BlogPost {
+      site {
+        siteMetadata {
+          title
+        }
       }
-    }
-    allMarkdownRemark(sort: { fields: [frontmatter___date], order: DESC }) {
-      edges {
-        node {
-          excerpt
-          fields {
-            slug
-          }
-          frontmatter {
-            date(formatString: "MMMM DD, YYYY")
-            title
-            description
+      allContentfulBlogPost {
+        nodes {
+          date(locale: "ja", fromNow: true)
+          id
+          slug
+          title
+          tags
+          description {
+            childMarkdownRemark {
+              html
+            }
           }
         }
       }
     }
-  }
-`
+  `)
+
+  return (
+    <Layout location={"/"} title={data.site.siteMetadata.title}>
+      <SEO title="All posts" />
+      {
+        data.allContentfulBlogPost.nodes.map((node, index) => {
+          const title = node.title || node.slug
+          return (
+            <article className="media" key={node.slug}>
+              <div className="media-content">
+                <div className="content">
+                  <h3 className="title">
+                    <Link style={{ boxShadow: `none` }} to={`${node.slug}_${index + 1}`}>
+                      {title}
+                    </Link>
+                  </h3>
+                  <p>
+                    <small>{node.date}</small>
+                  </p>
+                  <p
+                    dangerouslySetInnerHTML={{
+                      __html: node.description.html,
+                    }}
+                  />
+                </div>
+              </div>
+            </article>
+          )
+        })
+      }
+    </Layout>
+  )
+}
+
+export default IndexPage

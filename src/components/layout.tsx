@@ -7,7 +7,13 @@ import { faTwitter, faInstagram, faGithub, faFacebook, faYoutube } from '@fortaw
 import CoffeeImg from "../assets/coffee.png"
 import "../css/base.scss"
 
-const Layout = ({ location, title, children }) => {
+type Props = {
+  location?: string,
+  title?: string,
+  children: React.ReactNode
+}
+
+const Layout = ({ location, title, children }: Props) => {
   const rootPath = `${__PATH_PREFIX__}/`
 
   library.add(faTwitter)
@@ -103,6 +109,12 @@ const Layout = ({ location, title, children }) => {
       </footer>
     </div>
   )
+}
+
+Layout.defaultProps = {
+  location: "/",
+  title: "home",
+  children: <div />
 }
 
 export default Layout
