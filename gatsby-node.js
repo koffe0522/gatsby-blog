@@ -3,8 +3,6 @@ const { createFilePath } = require(`gatsby-source-filesystem`)
 
 exports.createPages = async ({ graphql, actions }) => {
   const { createPage } = actions
-
-  const blogPostTemplate = path.resolve(`./src/templates/blog-post.tsx`)
   const result = await graphql(
     `
       {
@@ -37,10 +35,10 @@ exports.createPages = async ({ graphql, actions }) => {
     // const next = index === 0 ? null : `${node.slug}_${index - 1}`
 
     createPage({
-      path: `${node.slug}_${index + 1}`,
-      component: blogPostTemplate,
+      path: `${node.slug}/${index + 1}`,
+      component: path.resolve(`./src/templates/blog-post.tsx`),
       context: {
-        slug: `${node.slug}_${index + 1}`,
+        slug: `${node.slug}`,
         node: node,
         // previous,
         // next,

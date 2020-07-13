@@ -41,7 +41,7 @@ const IndexPage = () => {
               <div className="media-content">
                 <div className="content">
                   <h3 className="title">
-                    <Link style={{ boxShadow: `none` }} to={`${node.slug}_${index + 1}`}>
+                    <Link style={{ boxShadow: `none` }} to={`${node.slug}/${index + 1}`}>
                       {title}
                     </Link>
                   </h3>
