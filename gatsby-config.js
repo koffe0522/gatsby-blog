@@ -14,7 +14,7 @@ module.exports = {
       name: `koffee`,
       summary: `my site`,
     },
-    siteUrl: `https://koffe0522.github.io/gatsby-blog/`,
+    siteUrl: `https://gallant-yonath-15a573.netlify.app/`,
     social: {
       twitter: `ComKoffee`,
     },
@@ -24,15 +24,15 @@ module.exports = {
     {
       resolve: `gatsby-source-filesystem`,
       options: {
-        path: `${__dirname}/content/blog`,
+        path: `${__dirname}/public/blog`,
         name: `blog`,
       },
     },
     {
       resolve: `gatsby-source-filesystem`,
       options: {
-        path: `${__dirname}/content/assets`,
-        name: `assets`,
+        path: `${__dirname}/public/static`,
+        name: `static`,
       },
     },
     {
