@@ -1,4 +1,4 @@
-import React from "react"
+import React, { useEffect, useState } from "react"
 import { Link } from "gatsby"
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { library } from '@fortawesome/fontawesome-svg-core'
@@ -14,46 +14,41 @@ type Props = {
 }
 
 const Layout = ({ location, title, children }: Props) => {
+  const [isActive, setIsActive] = useState<boolean>(false);
   const rootPath = `${__PATH_PREFIX__}/`
 
-  library.add(faTwitter)
-  library.add(faInstagram)
-  library.add(faGithub)
-  library.add(faFacebook)
-  library.add(faYoutube)
+  const onClickHandle = () => setIsActive(!isActive);
+
+  useEffect(() => {
+    library.add(faTwitter)
+    library.add(faInstagram)
+    library.add(faGithub)
+    library.add(faFacebook)
+    library.add(faYoutube)
+  }, [])
 
   return (
     <div>
       <header className="container">
-        <nav className="bd-navbar navbar has-shadow is-spaced" role="navigation" aria-label="main navigation">
+        <nav className="bd-navbar navbar is-spaced" role="navigation" aria-label="main navigation">
           <div className="navbar-brand">
             <Link className="navbar-item" to="/">
               <img src={CoffeeImg} alt="coffee" style={{ width: 28, height: 28 }} />
             </Link>
 
-            <a role="button" className="navbar-burger burger" aria-label="menu" aria-expanded="false" data-target="navbarBasicExample">
+            <a
+              role="button"
+              className="navbar-burger burger"
+              aria-label="menu"
+              aria-expanded="false"
+              onClick={() => onClickHandle()}>
               <span aria-hidden="true"></span>
               <span aria-hidden="true"></span>
               <span aria-hidden="true"></span>
             </a>
           </div>
 
-          <div id="navMenuMore" className="navbar-menu">
-            <div className="navbar-start">
-              <Link className="navbar-item" to="/">Home</Link>
-              <a className="navbar-item">Documentation</a>
-              <div className="navbar-item has-dropdown is-hoverable">
-                <a className="navbar-link">More</a>
-                <div className="navbar-dropdown">
-                  <a className="navbar-item">About</a>
-                  <a className="navbar-item">Jobs</a>
-                  <a className="navbar-item">Contact</a>
-                  <hr className="navbar-divider" />
-                  <a className="navbar-item">Report an issue</a>
-                </div>
-              </div>
-            </div>
-
+          <div id="navMenuMore" className={`navbar-menu ${isActive ? "is-active" : ""}`}>
             <div className="navbar-end">
               <a className="navbar-item bd-navbar-icon" href="https://mobile.twitter.com/ComKoffee" target="_blank">
                 <FontAwesomeIcon icon={faTwitter} />
@@ -82,7 +77,7 @@ const Layout = ({ location, title, children }: Props) => {
           <div className="hero-body">
             <div className="container has-text-centered">
               <img src={CoffeeImg} alt="coffee" style={{ width: 128, height: 128 }} />
-              <h1 className="title is-1">KOFFEE TIME</h1>
+              <h1 className="title is-1 is-family-sans-serif">KOFFEE TIME</h1>
               <h2 className="subtitle">Tech/Photo/Daliy</h2>
             </div>
           </div>
@@ -94,7 +89,7 @@ const Layout = ({ location, title, children }: Props) => {
                 <h2 className="title is-2">記事一覧</h2>
               </div> : null
           }
-          <div className="columns is-mobile">
+          <div className="columns">
             <div className="column is-three-fifths is-offset-one-fifth">{children}</div>
           </div>
 
